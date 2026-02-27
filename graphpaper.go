@@ -1,8 +1,25 @@
 package main
 
-import "codeberg.org/go-pdf/fpdf"
+import (
+	"fmt"
+	"os"
+	"strconv"
+
+	"codeberg.org/go-pdf/fpdf"
+)
 
 func main() {
+	// take size from command line argument, default to 1mm
+	size := 1
+	if len(os.Args) > 1 {
+		chosen_size, err := strconv.Atoi(os.Args[1])
+		if err != nil {
+			panic(err)
+		}
+		size = chosen_size
+	}
+
+	// init fpdf
 	pdf := fpdf.New("P", "mm", "A4", "")
 	pdf.AddPage()
 
@@ -15,11 +32,12 @@ func main() {
 	pdf.SetLineWidth(0.01)
 	pdf.SetDrawColor(0, 0, 0)
 
-	for y := range h + 5 {
+	// draw grid
+	for y := 0; y < h+5; y += size {
 		pdf.Line(-1, float64(y)*vscale, w+1, float64(y)*vscale)
 	}
 
-	for x := range w + 5 {
+	for x := 0; x < w+5; x += size {
 		pdf.Line(float64(x), -1, float64(x), h+1)
 	}
 
@@ -28,5 +46,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	println("/tmp/graphpaper.pdf")
+	fmt.Printf("%d mm -> ./graphpaper.pdf\n", size)
 }
