@@ -23,7 +23,8 @@ func main() {
 		pdf.Line(float64(x), -1, float64(x), h+1)
 	}
 
-	err := pdf.OutputFileAndClose("/tmp/graphpaper.pdf")
+	// output
+	err := pdf.OutputFileAndClose("./graphpaper.pdf")
 	if err != nil {
 		panic(err)
 	}
